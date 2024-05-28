@@ -1,4 +1,4 @@
-package com.chong.study.batch.configuration;
+package com.chong.study.batch.chunk;
 
  
 import org.junit.jupiter.api.Test;
