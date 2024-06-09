@@ -7,8 +7,10 @@ import org.mybatis.spring.batch.MyBatisBatchItemWriter;
 import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
@@ -16,7 +18,6 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
-import org.springframework.batch.item.function.FunctionItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,6 +51,7 @@ public class CsvToDbConfiguration {
                 .faultTolerant()
                 .skip(Exception.class)
                 .skipLimit(3)
+                // .listener(listener())
                 .build();
     }
 
@@ -89,5 +91,33 @@ public class CsvToDbConfiguration {
                 return new Student(Integer.parseInt(fileds[0]), fileds[1], chinese, english, math);
             };
         }
+    }
+
+    @Bean
+    private SkipListener listener() {
+        return new SkipListener<Student, Student>() {
+
+            @Override
+            public void onSkipInProcess(Student item, Throwable t) {
+                System.out.println(item);
+                System.out.println("---------------onSkipInProcess");
+                SkipListener.super.onSkipInProcess(item, t);
+            }
+
+            @Override
+            public void onSkipInRead(Throwable t) {
+
+                System.out.println("---------------onSkipInRead");
+                SkipListener.super.onSkipInRead(t);
+            }
+
+            @Override
+            public void onSkipInWrite(Student item, Throwable t) {
+                System.out.println(item);
+                System.out.println("---------------onSkipInWrite");
+                SkipListener.super.onSkipInWrite(item, t);
+            }
+
+        };
     }
 }

@@ -1,6 +1,5 @@
 package com.chong.study.batch.chunk;
 
- 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.core.Job;
@@ -16,7 +15,7 @@ import org.springframework.util.StopWatch;
 import com.chong.study.Constans;
 import com.chong.study.StudyApplication;
 
-@SpringBatchTest 
+@SpringBatchTest
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = StudyApplication.class)
 public class StudentJobTest {
@@ -30,8 +29,9 @@ public class StudentJobTest {
     void testStudentJob() throws Exception {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        String filePath = "C:\\Users\\31238\\OneDrive\\デスクトップ\\test.csv";
-        JobParameters jobParameters = new JobParametersBuilder().addString(Constans.FILE_PATH, filePath).toJobParameters();
+        String filePath = "C:\\Users\\31238\\OneDrive\\デスクトップ\\test_10000.csv";
+        JobParameters jobParameters = new JobParametersBuilder().addString(Constans.FILE_PATH, filePath)
+                .addLong("unique", System.currentTimeMillis()).toJobParameters();
         jobLauncherTestUtils.getJobLauncher().run(job, jobParameters);
         stopWatch.stop();
         System.out.println(stopWatch.getTotalTimeMillis());
