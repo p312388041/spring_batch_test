@@ -92,8 +92,7 @@ public class CsvToDbConfiguration {
             };
         }
     }
-
-    @Bean
+ 
     private SkipListener listener() {
         return new SkipListener<Student, Student>() {
 
